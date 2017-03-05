@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="./index.css">
+</head>
+<body>
+	<hgroup>
+		<h1>排序示意图</h1>
+		<h2>点击按钮排序</h2>
+	</hgroup>
+	<div>
+		<ul>
+		</ul>
+	</div>
+	<div>
+		<input type="button" value="冒泡排序" onclick="clickHandle()">
+	</div>
+</body>
+	<script src="./init.js"></script>
+	<!-- 冒泡排序 -->
+	<script src="./bubbleSort.js"></script>
+	<script>
+		
+		
+		// 排序
+
+		// 冒泡排序
+		function clickHandle() {
+			h2.innerHTML = '冒泡排序'
+			var bubble = new Bubble({
+				arr: randomArr,
+				liObjs: liObjs
+			})
+			bubble.start()
+		}
+
+	</script>
+</html>
