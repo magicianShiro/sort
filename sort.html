@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		ul,li{
+			list-style: none;
+		}
+		hgroup {
+			text-align: center;
+			margin-top:50px;
+		}
+		div:first-of-type{
+			margin: 200px auto 10px;
+			width: 800px;
+			height: 300px;
+			border-left: 1px solid #000;
+			border-bottom: 1px solid #000;		
+			position: relative;
+		}
+		div:first-of-type::before {
+			display: block;
+			content: "";
+			width: 0px;
+			height: 0px;
+			position: absolute;
+			left: -10px;
+			top: -20px;
+			border-left: 10px solid transparent;
+			border-right: 10px solid transparent;
+			border-top: 10px solid transparent;
+			border-bottom: 10px solid #000;
+		}
+
+		div:first-of-type::after {
+			display: block;
+			content: "";
+			width: 0px;
+			height: 0px;
+			position: absolute;
+			bottom: -10px;
+			right: -20px;
+			border-left: 10px solid #000;
+			border-right: 10px solid transparent;
+			border-top: 10px solid transparent;
+			border-bottom: 10px solid transparent;
+		}
+		ul {
+			width: 100%;
+			height: 100%;
+			padding:0 20px;
+			font-size: 0;
+			position: relative;
+		}
+		li{
+			float: left;
+			position: absolute;
+			bottom: 0px;
+			background-color: #ccc;
+		}
+		div:last-of-type {
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<hgroup>
+		<h1>排序示意图</h1>
+		<h2></h2>
+	</hgroup>
+	<div>
+		<ul>
+		</ul>
+	</div>
+	<div>
+		<input type="button" value="冒泡排序" onclick="clickHandle()">
+	</div>
+</body>
+	<script>
+		
+		// 定义li的个数
+		var liNum = 15
+		// 定义生成的个数
+		var count = 30
+		// 获取元素
+		var ulObj = document.querySelector('ul')
+		var h2 = document.querySelector('h2')
+		// 清楚能放下li的最大值
+		var max = Math.floor(getStyle(ulObj, 'width') / liNum)
+
+
+		// 获取最小值到最大值之间的随机数
+		function range(min, max) {
+			return Math.floor(Math.random()*(max-min+1)+min)
+		}
+
+		// 生成数据不同的随机数组
+		function getRandomArr(max, min=1){
+			count < (max - min + 1) ? count : (max - min + 1)
+			var currentArr = []
+			while(count){
+				var random = range(min, max)
+				if(!currentArr.includes(random)){
+					count--
+					currentArr.push(random)
+				}
+			}
+			return currentArr
+		}
+
+		// 简化console.log
+		function log(param){
+			return console.log(param)
+		}
+
+		// 获取样式
+		function getStyle(targetObj, property) {
+			return window.getComputedStyle ? parseInt(window.getComputedStyle(targetObj, null)[property]) : parseInt(targetObj.currentStyle[property])
+		}
+
+		// 获取随机数
+		var randomArr = getRandomArr(max, 10)
+
+		// 根据数组的值,等到百分比,最大是max
+		var persentArr = randomArr.map((num) => {
+			return num/max
+		})
+
+
+		// 动态生成li
+		persentArr.forEach(function(num, index){
+			var liObj = document.createElement('li')
+			liObj.style.width = liNum + 'px'
+			liObj.style.height = num*getStyle(ulObj, ['height']) +'px'
+			liObj.style.left = (index+1) * (liNum+5) +'px'
+			ulObj.appendChild(liObj)
+		})
+
+
+		var liObjs = document.querySelectorAll('li')
+
+		// 排序
+
+		var bubb = bubble()
+		// 冒泡排序
+		function clickHandle() {
+			h2.innerHTML = '冒泡排序'
+			bubb.next()
+		}
+
+		function* bubble() {
+			var newArr = [].slice.call(randomArr)
+			for(let i = 0; i < newArr.length - 1; i++){
+				for(let j = 0; j < newArr.length -1 - i ; j++) {
+					yield changeLiColor(j, j+1)
+					if(newArr[j] > newArr[j+1]) {	
+						yield changeLiHeight(j, j+1)	
+
+						// 交换li的位置
+						var temp = newArr[j]
+						newArr[j] = newArr[j+1]
+						newArr[j+1] = temp
+						// [newArr[j], newArr[j+1]] = [newArr[j+1], newArr[j]]
+					}
+				}
+			}
+
+			// 全部变为灰色
+			liObjs.forEach(function(liObj){
+				liObj.style.backgroundColor = '#ccc'
+			})
+		}
+
+		// 交换li的位置
+		function changeLiColor(currentNum, targetNum) {
+			// 排他
+			liObjs.forEach(function(liObj){
+				liObj.style.backgroundColor = '#ccc'
+			})
+
+			liObjs[currentNum].style.backgroundColor = 'cyan'
+			liObjs[targetNum].style.backgroundColor = 'cyan'
+
+			
+			setTimeout(function(){
+				bubb.next()
+			}, 50)
+
+
+			
+
+		}
+
+		// 改变高度
+		function changeLiHeight(currentNum, targetNum) {
+			var temp = liObjs[currentNum].style.height
+			liObjs[currentNum].style.height = liObjs[targetNum].style.height 
+			liObjs[targetNum].style.height = temp
+
+			setTimeout(function(){
+				bubb.next()
+			}, 50)
+		}
+	</script>
+</html>
